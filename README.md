@@ -1,6 +1,6 @@
 # oci-cli for Docker/Podman container
 
-oci-cli (Command Line Interface for Oracle Cloud Infrastructure) Docker/Podman container setup
+oci-cli - [Command Line Interface for Oracle Cloud Infrastructure](https://github.com/oracle/oci-cli) Docker/Podman container setup
 
 ## How to build
 
@@ -17,6 +17,16 @@ You can specify the usage of docker or podman from **env.mk**. From the same fil
 Run **make oci**, then add following alias on yours **.bashrc**
 
     alias oci='docker run --rm -it -v "$HOME/.oci:$HOME/.oci" oci'
+
+You can now execute oci-cli commands, example:
+
+    $ oci os ns get
+    {
+     "data": "mytenancy"
+    }
+
+> **_NOTE:_**  the oci-cli configuration is stored on host under  "**$HOME/.oci**"
+
 
 ## Author
 
