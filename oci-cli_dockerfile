@@ -53,8 +53,6 @@ ENV PIP_ROOT_USER_ACTION=ignore \
     https_proxy=$HTTP_PROXY
 
 # --------------------------------------------------------
-RUN dnf -y install jq \
-    && rm -rf /var/cache/dnf/*
 
 RUN if [ -z "$HTTP_PROXY" ]; then \
     echo "NO proxy"; \
