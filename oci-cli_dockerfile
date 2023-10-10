@@ -70,9 +70,6 @@ RUN if [ -z "$HTTP_PROXY" ]; then \
 RUN groupadd -g "$GROUP_ID" "$USER_NAME" \
     && useradd --create-home --home-dir "/home/$USER_NAME" --shell /bin/bash --uid "$USER_ID" --gid "$GROUP_ID" "$USER_NAME" >/dev/null 2>&1
 
-#RUN cp /usr/local/lib/python3.9/site-packages/oci_cli/bin/oci_autocomplete.sh /usr/local/bin/oci_autocomplete.sh \
-#    && chmod +x /usr/local/bin/oci_autocomplete.sh
-#RUn echo '[[ -e "/usr/local/bin/oci_autocomplete.sh" ]] && source "/usr/local/bin/oci_autocomplete.sh"' >> /home/"$USER_NAME"/.bashrc
 
 # --------------------------------------------------------
 WORKDIR /$USER_NAME
