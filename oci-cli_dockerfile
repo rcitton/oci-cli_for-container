@@ -1,0 +1,86 @@
+# -------------------------------------------------------------------------------
+# Author: Ruggero Citton
+# Date: September 18 , 2023
+# Purpose: Oracle Cloud Infrastructure CLI
+#
+#
+# Licensed under The MIT License (MIT).
+# See included LICENSE file or the notice below.
+#
+# Copyright (c) 2023 Ruggero Citton
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included
+# in all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+# ----------------------------------------------------------------------------
+FROM ghcr.io/oracle/oraclelinux8-python:3.9
+
+# --------------------------------------------------------
+ARG BUILD_DATE
+ARG VERSION
+ARG REVISION
+# --------------------------------------------------------
+ARG HTTP_PROXY
+# --------------------------------------------------------
+ARG USER_NAME
+ARG USER_ID
+ARG GROUP_ID
+# --------------------------------------------------------
+
+LABEL \
+  maintainer="Ruggero Citton <rcitton@gmail.com>" \
+  authors="Ruggero Citton <rcitton@gmail.com>" \
+  title="Oracle Cloud Infrastructure CLI" \
+  description="Module to setup Oracle Cloud Infrastructure CLI container" \
+  created=$BUILD_DATE
+
+ENV PIP_ROOT_USER_ACTION=ignore \
+    http_proxy=$HTTP_PROXY \
+    https_proxy=$HTTP_PROXY
+
+# --------------------------------------------------------
+RUN dnf -y install jq \
+    && rm -rf /var/cache/dnf/*
+
+RUN if [ -z "$HTTP_PROXY" ]; then \
+    echo "NO proxy"; \
+    python3 -m pip install --no-cache-dir --upgrade pip ; \
+    python3 -m pip install --no-cache-dir oci-cli ; \
+  else \
+    echo "Using proxy: $HTTP_PROXY"; \
+    python3 -m pip install --proxy "$HTTP_PROXY" --no-cache-dir --upgrade pip ; \
+    python3 -m pip install --proxy "$HTTP_PROXY" --no-cache-dir oci-cli ; \
+  fi
+
+# Creating the User
+RUN groupadd -g "$GROUP_ID" "$USER_NAME" \
+    && useradd --create-home --home-dir "/home/$USER_NAME" --shell /bin/bash --uid "$USER_ID" --gid "$GROUP_ID" "$USER_NAME" >/dev/null 2>&1
+
+#RUN cp /usr/local/lib/python3.9/site-packages/oci_cli/bin/oci_autocomplete.sh /usr/local/bin/oci_autocomplete.sh \
+#    && chmod +x /usr/local/bin/oci_autocomplete.sh
+#RUn echo '[[ -e "/usr/local/bin/oci_autocomplete.sh" ]] && source "/usr/local/bin/oci_autocomplete.sh"' >> /home/"$USER_NAME"/.bashrc
+
+# --------------------------------------------------------
+WORKDIR /$USER_NAME
+USER $USER_NAME
+
+ENTRYPOINT ["oci"]
+CMD ["--help"]
+
+# --------------
+# EndOfFile
+# --------------
