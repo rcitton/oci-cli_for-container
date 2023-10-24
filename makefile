@@ -34,6 +34,7 @@ include ./env.mk
 ###########################
 
 # ----------------------------------------------------------------
+UNAME_S    := $(shell uname -s)
 IDU        := $(shell id -u)
 IDG        := $(shell id -g)
 USER       := $(shell id -un)
@@ -41,7 +42,11 @@ BUILD_DATE := $(shell date +"%Y-%m-%d_%H-%M-%S")
 
 oci:
 	@echo "Create oci-cli container..."
-	-$(RUNTIMECT) rmi oci:latest
+    ifeq ($(UNAME_S), Darwin)
+		-$(RUNTIMECT) rmi localhost/oci:latest
+    else
+		-$(RUNTIMECT) rmi oci:latest
+    endif
 	$(RUNTIMECT) build --force-rm=true  \
 	--build-arg USER_NAME=$(USER) \
 	--build-arg USER_ID=$(IDU) \
@@ -52,7 +57,11 @@ oci:
 
 oci-proxy:
 	@echo "Create oci-cli container..."
-	-$(RUNTIMECT) rmi oci:latest
+    ifeq ($(UNAME_S), Darwin)
+		-$(RUNTIMECT) rmi localhost/oci:latest
+    else
+		-$(RUNTIMECT) rmi oci:latest
+    endif
 	$(RUNTIMECT) build --force-rm=true  \
 	--build-arg HTTP_PROXY=$(HTTP_PROXY) \
 	--build-arg USER_NAME=$(USER) \
@@ -65,7 +74,11 @@ oci-proxy:
 
 oci-cleanup:
 	@echo "Cleanup oci-cli container image..."
-	$(RUNTIMECT) rmi oci:latest
+    ifeq ($(UNAME_S), Darwin)
+		$(RUNTIMECT) rmi localhost/oci:latest
+    else
+		$(RUNTIMECT) rmi oci:latest
+    endif
 
 
 # --------------
