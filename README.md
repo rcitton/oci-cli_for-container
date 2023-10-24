@@ -14,9 +14,16 @@ You can specify the usage of docker or podman from **env.mk**. From the same fil
 
 ## Usage
 
-Run **make oci**, then add following alias on yours **.bashrc**
+Run **make oci**, then add following alias on yours **.bashrc**:
+
+if you use podman:
+
+    alias oci='podman run --rm -it -v "$HOME/.oci:$HOME/.oci" oci'
+
+if you use docker:
 
     alias oci='docker run --rm -it -v "$HOME/.oci:$HOME/.oci" oci'
+
 
 You can now execute oci-cli commands, example:
 
