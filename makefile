@@ -34,7 +34,6 @@ include ./env.mk
 ###########################
 
 # ----------------------------------------------------------------
-UNAME_S    := $(shell uname -s)
 IDU        := $(shell id -u)
 IDG        := $(shell id -g)
 USER       := $(shell id -un)
@@ -42,25 +41,26 @@ BUILD_DATE := $(shell date +"%Y-%m-%d_%H-%M-%S")
 
 oci:
 	@echo "Create oci-cli container..."
-    ifeq ($(UNAME_S), Darwin)
-		-$(RUNTIMECT) rmi localhost/oci:latest
-    else
+    ifeq ($(RUNTIMECT), /usr/bin/docker)
 		-$(RUNTIMECT) rmi oci:latest
+    else
+		-$(RUNTIMECT) rmi localhost/oci:latest
     endif
 	$(RUNTIMECT) build --force-rm=true  \
 	--build-arg USER_NAME=$(USER) \
 	--build-arg USER_ID=$(IDU) \
 	--build-arg GROUP_ID=$(IDG) \
+	--build-arg BUILD_DATE=$(BUILD_DATE) \
 	--build-arg VERSION=$(VERSION) \
 	--build-arg REVISION=$(REVISION) \
 	--no-cache=true -t oci -f oci-cli_dockerfile . 
 
 oci-proxy:
 	@echo "Create oci-cli container..."
-    ifeq ($(UNAME_S), Darwin)
-		-$(RUNTIMECT) rmi localhost/oci:latest
-    else
+    ifeq ($(RUNTIMECT), /usr/bin/docker)
 		-$(RUNTIMECT) rmi oci:latest
+    else
+		-$(RUNTIMECT) rmi localhost/oci:latest
     endif
 	$(RUNTIMECT) build --force-rm=true  \
 	--build-arg HTTP_PROXY=$(HTTP_PROXY) \
@@ -74,10 +74,10 @@ oci-proxy:
 
 oci-cleanup:
 	@echo "Cleanup oci-cli container image..."
-    ifeq ($(UNAME_S), Darwin)
-		$(RUNTIMECT) rmi localhost/oci:latest
+    ifeq ($(RUNTIMECT), /usr/bin/docker)
+		-$(RUNTIMECT) rmi oci:latest
     else
-		$(RUNTIMECT) rmi oci:latest
+		-$(RUNTIMECT) rmi localhost/oci:latest
     endif
 
 
