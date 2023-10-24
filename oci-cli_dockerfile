@@ -36,7 +36,6 @@ ARG REVISION
 # --------------------------------------------------------
 ARG HTTP_PROXY
 # --------------------------------------------------------
-ARG UNAME_S
 ARG USER_NAME
 ARG USER_ID
 ARG GROUP_ID
@@ -66,12 +65,9 @@ RUN if [ -z "$HTTP_PROXY" ]; then \
     fi
 
 # Creating the User
-RUN if [[ "$UNAME_S" -eq "Linux" ]]; then \
-      groupadd -g "$GROUP_ID" "$USER_NAME" ; \
-      useradd --create-home --home-dir "/home/$USER_NAME" --shell /bin/bash --uid "$USER_ID" --gid "$GROUP_ID" "$USER_NAME" >/dev/null 2>&1 ; \
-    else \
-      useradd --create-home --home-dir "/home/$USER_NAME" --shell /bin/bash --uid "$USER_ID" "$USER_NAME" >/dev/null 2>&1 ; \
-    fi
+RUN groupadd -g "$GROUP_ID" "$USER_NAME" ; \
+    useradd --create-home --home-dir "/home/$USER_NAME" --shell /bin/bash --uid "$USER_ID" --gid "$GROUP_ID" "$USER_NAME" >/dev/null 2>&1
+
 
 # --------------------------------------------------------
 WORKDIR /$USER_NAME
