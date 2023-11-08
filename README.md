@@ -20,7 +20,7 @@ You can specify the usage of docker or podman from '**env.mk**'. From the same f
 
     if you use podman:
 
-        alias oci='podman run --rm -it -v "$HOME/.oci:$HOME/.oci" oci'
+        alias oci='podman run --rm -it --userns=keep-id -v "$HOME/.oci:$HOME/.oci" oci'
 
     if you use docker:
 
