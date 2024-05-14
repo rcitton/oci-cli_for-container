@@ -33,13 +33,41 @@
 include ./env.mk
 ###########################
 
-# ----------------------------------------------------------------
 IDU        := $(shell id -u)
 IDG        := $(shell id -g)
 USER       := $(shell id -un)
 BUILD_DATE := $(shell date +"%Y-%m-%d_%H-%M-%S")
 
-oci:
+
+###########################
+## Colors definition     ##
+###########################
+COLOUR_GREEN=\033[0;32m
+COLOUR_RED=\033[0;31m
+COLOUR_YELLOW=\033[0;33m
+COLOUR_BLUE=\033[0;34m
+COLOUR_END=\033[0m
+
+###########################
+## Help Setup            ##
+###########################
+.DEFAULT_GOAL := help
+.PHONY: help
+help:
+	@echo "$(COLOUR_GREEN)-------------------------$(COLOUR_END)"
+	@echo "$(COLOUR_GREEN)Make Commands for oci-cli$(COLOUR_END)"
+	@echo "$(COLOUR_GREEN)-------------------------$(COLOUR_END)"
+	@grep -E '^[a-zA-Z0-9_-]+:.*?## .*$$' $(MAKEFILE_LIST) \
+	| sed -n 's/^\(.*\): \(.*\)##\(.*\)/\1\3/p' \
+	| column -t  -s ' '
+
+###############################################################################
+#                                Main SECTION                                 #
+###############################################################################
+# ----------------------------------------------------------------
+
+
+oci: ## 🏗️ Setup oci-cli
 	@echo "Create oci-cli container..."
     ifeq ($(RUNTIMECT), /usr/bin/docker)
 		-$(RUNTIMECT) rmi oci:latest
@@ -55,7 +83,7 @@ oci:
 	--build-arg REVISION=$(REVISION) \
 	--no-cache=true -t oci -f oci-cli_dockerfile . 
 
-oci-proxy:
+oci-proxy: ## 🌐 Setup oci-cli-by-proxy
 	@echo "Create oci-cli container..."
     ifeq ($(RUNTIMECT), /usr/bin/docker)
 		-$(RUNTIMECT) rmi oci:latest
@@ -72,7 +100,7 @@ oci-proxy:
 	--build-arg REVISION=$(REVISION) \
 	--no-cache=true -t oci -f oci-cli_dockerfile . 
 
-oci-cleanup:
+oci-cleanup: ## 🧹 Cleanup oci-cli
 	@echo "Cleanup oci-cli container image..."
     ifeq ($(RUNTIMECT), /usr/bin/docker)
 		-$(RUNTIMECT) rmi oci:latest
