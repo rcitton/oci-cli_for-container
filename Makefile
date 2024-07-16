@@ -108,9 +108,8 @@ oci-cleanup: ## 🧹 Cleanup oci-cli
 		-$(RUNTIMECT) rmi localhost/oci:latest
     endif
 
-oci-update: ## 🔄 update oci-cli
-	@echo "Update oci-cli..."
-	oci-cleanup oci
+oci-update: oci-cleanup oci ## 🔄 update oci-cli
+
 
 # --------------
 # EndOfFile
