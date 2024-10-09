@@ -54,9 +54,9 @@ COLOUR_END=\033[0m
 .DEFAULT_GOAL := help
 .PHONY: help
 help:
-	@echo "$(COLOUR_GREEN)-------------------------$(COLOUR_END)"
-	@echo "$(COLOUR_GREEN)Make Commands for oci-cli$(COLOUR_END)"
-	@echo "$(COLOUR_GREEN)-------------------------$(COLOUR_END)"
+	@echo "$(COLOUR_GREEN)---------------------------$(COLOUR_END)"
+	@echo "$(COLOUR_GREEN) Make Commands for oci-cli $(COLOUR_END)"
+	@echo "$(COLOUR_GREEN)---------------------------$(COLOUR_END)"
 	@grep -E '^[a-zA-Z0-9_-]+:.*?## .*$$' $(MAKEFILE_LIST) \
 	| sed -n 's/^\(.*\): \(.*\)##\(.*\)/\1\3/p' \
 	| column -t  -s ' '
@@ -65,7 +65,6 @@ help:
 #                                Main SECTION                                 #
 ###############################################################################
 # ----------------------------------------------------------------
-
 
 oci: ## 🏗️ Setup oci-cli
 	@echo "Create oci-cli container..."

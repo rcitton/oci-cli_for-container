@@ -30,6 +30,7 @@
 
 DOCKER=/usr/bin/docker
 PODMAN=/usr/bin/podman
+# ------------------
 RUNTIMECT=$(DOCKER)
 # ------------------
 VERSION=1
