@@ -73,8 +73,10 @@ RUN groupadd -g "$GROUP_ID" "$USER_NAME" ; \
 WORKDIR /$USER_NAME
 USER $USER_NAME
 
+#ENTRYPOINT ["tail", "-f", "/dev/null"]
 ENTRYPOINT ["oci"]
 CMD ["--help"]
+
 
 # --------------
 # EndOfFile
