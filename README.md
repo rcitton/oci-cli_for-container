@@ -21,11 +21,11 @@ You can specify the usage of docker or podman from '**env.mk**'. From the same f
 
     if you use podman:
 
-        alias oci='podman run --rm -it --userns=keep-id -v "$HOME/.oci:$HOME/.oci:z" oci'
+        alias oci='podman run --rm -it --userns=keep-id -v "$HOME/.oci:$HOME/.oci:z" --tmpfs /run --tmpfs /tmp oci'
 
     if you use docker:
 
-        alias oci='docker run --rm -it -v "$HOME/.oci:$HOME/.oci" oci'
+        alias oci='docker run --rm -it -v "$HOME/.oci:$HOME/.oci" -v /sys/fs/cgroup:/sys/fs/cgroup:ro --tmpfs /run --tmpfs oci'
 
 
 You can now execute oci-cli commands, example:
